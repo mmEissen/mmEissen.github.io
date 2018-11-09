@@ -11,7 +11,7 @@ The ESP8266-01 can be flashed using the Arduino in-system programer (ISP). The A
 Description
 '''''''''''
 
-    - The Arduino runs on :math:`5\text{V}`, but the ESP runs on 3.3V. This means we need a voltage divider between the Arduino transmision pin and the ESP receive pin. We can make this out of a :math:`1\text{k}\Omega` and a :math:`2\text{k}\Omega` Resistor. You canpick any other resistor values as long as :math:`R_2 \approx 1.9 R_1`.
+    - The Arduino runs on :math:`5\text{V}`, but the ESP runs on 3.3V. This means we need a voltage divider between the Arduino transmision pin and the ESP receive pin. We can make this out of a :math:`1\text{k}\Omega` and a :math:`2\text{k}\Omega` Resistor. You can pick any other resistor values as long as :math:`R_2 \approx 1.9 R_1`.
     - The Arduino :math:`3.3\text{V}` output does not provide enough current to power the ESP8266-01 when it's being flashed. Even though everything else seems to work when you connect the ESP to the Arduinos :math:`3.3\text{V}` output, the flashing will fail. You will need an external :math:`3.3\text{V}` power supply.
     - Unlike using a normal programer, you must connect the ``RX`` to ``RX`` and the ``TX`` to ``TX``. The ``RX``/``TX`` labels on the Arduino only apply for normal operation, not for using it as a programer.
     - The ``CH_PD`` pin needs to be pulled up, through a :math:`3.3\text{k}\Omega - 10\text{k}\Omega` resistor to put the ESP2866 into programing mode. After flashing the ESP will exit programing mode and you need to disconnect and reconnect power to put it back into programing mode if you want to flash again.

@@ -22,13 +22,6 @@ Software engineer at Smarkets
 
     projects/AirPixel
 
-.. .. toctree::
-..     :maxdepth: 1
-..     :caption: DevBlog
-..     :hidden:
-.. 
-..     devblog/2018-11-07
-
 .. toctree::
     :maxdepth: 1
     :caption: Notes

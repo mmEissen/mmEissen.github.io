@@ -13,7 +13,9 @@ The measurements were produced with the following code snippet:
     python
 
     >>> import timeit
-    >>> exponents_and_numbers = [(e, 2 ** e) for e in range(1000000, 100000001,1000000)]
+    >>> exponents_and_numbers = [
+    ...     (e, 2 ** e) for e in range(1000000, 100000001,1000000)
+    ... ]
     >>> for e, a in exponents_and_numbers:
     ...     time = timeit.timeit("a + 1", number=100, globals=globals())
     ...     print(f"{e},{time}")

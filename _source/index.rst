@@ -28,3 +28,4 @@ Software engineer at Smarkets
     :hidden:
 
     notes/ESP2866-01
+    notes/logarithmic_addition

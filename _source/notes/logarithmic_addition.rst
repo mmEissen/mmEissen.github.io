@@ -10,7 +10,7 @@ This measurement is done with python 3.6. As you can see, the measurements taken
 The measurements were produced with the following code snippet:
 
 .. code-block::
-    python
+    python3
 
     >>> import timeit
     >>> exponents_and_numbers = [
@@ -36,7 +36,6 @@ Full measurement output:
 .. code-block::
     python
 
-    ```
     1000000,0.0046048509975662455
     2000000,0.008900251996237785
     3000000,0.01304833900212543
@@ -137,4 +136,3 @@ Full measurement output:
     98000000,0.4451171120017534
     99000000,0.4497541149976314
     100000000,0.4457786359998863
-    ```

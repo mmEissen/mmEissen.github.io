@@ -4,7 +4,7 @@ python:
 install:
   - pip install -r requirements.txt
 script:
-  - ./build
+  - make web
 deploy:
   provider: pages
   skip-cleanup: true

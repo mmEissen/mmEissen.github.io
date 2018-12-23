@@ -1,3 +1,8 @@
-#moritz-eissenhauer {
+#moritz-m-eissenhauer {
     text-align: center;
+}
+
+table, td, tr, th {
+    border-color: #FFFFFF00 !important;
+    box-shadow: none !important;
 }

@@ -1,5 +1,5 @@
-Run Time Complexity of Addition
-===============================
+Complexity of Addition
+======================
 
 When we analyse run time complexity we often assume that addition has a constant run time complexity. For most intents and purposes this is true. However it is actually possible to empirically show that adding two integers has a logarithmic run time complexity.
 

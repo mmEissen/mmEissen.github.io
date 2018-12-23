@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Moritz Eissenhauer
-==================
+Moritz M. Eissenhauer
+=====================
 
 Software engineer at Smarkets
 
@@ -29,3 +29,10 @@ Software engineer at Smarkets
 
     notes/ESP2866-01
     notes/logarithmic_addition
+
+.. toctree::
+    :maxdepth: 1
+    :caption: About
+    :hidden:
+
+    about/resume

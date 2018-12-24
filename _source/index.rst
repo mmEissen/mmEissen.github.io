@@ -19,8 +19,9 @@ Software engineer at Smarkets
     :maxdepth: 1
     :caption: Projects
     :hidden:
+    :glob:
 
-    projects/AirPixel
+    projects/*
 
 .. toctree::
     :maxdepth: 1

@@ -12,4 +12,4 @@ projects:
 
 clean:
 	rm -rf _build
-	rm _source/projects/*.rst
+	rm -f _source/projects/*.rst

@@ -5,13 +5,13 @@ Moritz Eissenhauer
 
     | moritz.eissenhauer@gmail.com
     | +44 07450 014741
-    | www.eissenhauer.com
     | www.github.com/mmeissen
+    | www.eissenhauer.com
 
 .. only:: web
 
-    | www.eissenhauer.com
-    | www.github.com/mmeissen
+    | `Github <www.github.com/mmeissen>_
+    | `LinkedIn <linkedin.com/in/moritz-e-b33312131>`_ (prefered contact method)
 
 Experience
 ----------

@@ -10,8 +10,8 @@ Moritz Eissenhauer
 
 .. only:: web
 
-    | `Github <www.github.com/mmeissen>`_
-    | `LinkedIn <linkedin.com/in/moritz-e-b33312131>`_ (prefered contact method)
+    | `Github <https://www.github.com/mmeissen>`_
+    | `LinkedIn <https://linkedin.com/in/moritz-e-b33312131>`_ (prefered contact method)
 
 Experience
 ----------

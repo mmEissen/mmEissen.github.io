@@ -23,10 +23,10 @@ Experience
     * + Nov 2017 ongoing
       + **Software Engineer**, `Smarkets <https://smarketshq.com/>`_, London
 
-        - Implemented, improved, and maintained Python microservices for the integration of sports data from third party spurces
-        - Self managed work in start up culture
+        - Implemented, improved, and maintained Python microservices for the integration of sports data from third party sources
+        - Self managed work in startup culture
         - Helped redesign the interview process for new candidates
-        - Helped with the on-bording process for new employees
+        - Helped with the on-boarding process for new employees
 
     * + Dec 2016 to Nov 2017
       + **Software Engineer**, `Reckon Digital <https://reckondigital.com/>`_, London
@@ -71,6 +71,6 @@ Skills
         - **Libraries and Frameworks (Other):** OpenGL, Qt5
         - **Other Experience:** Arduino Programming, Signal Processing (audio)
     * + Side Projects
-      + - **Airpixel:** (https://github.com/mmEissen/airpixel) Allows controling NeoPixel LEDs with python through a WiFi enabled microcontroler
+      + - **Airpixel:** (https://github.com/mmEissen/airpixel) Allows controlling NeoPixel LEDs with python through a WiFi enabled microcontroller
         - **Audioviz:** (https://github.com/mmEissen/audioviz) Visualizes audio from an input device on an LED ring in real time
         - **Importgraph:** (https://github.com/mmEissen/importgraph) Generate a graph from python imports

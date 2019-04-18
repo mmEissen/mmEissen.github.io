@@ -34,7 +34,6 @@ Experience
         - Developed a Django web application backend to schedule the testing of large industrial turbines at General Electric
         - Developed new features, improved test coverage, improved the software and database architecture
         - Responsible for design decisions, prioritizing tasks, defining specifications
-    
 
 Education
 ---------
@@ -62,11 +61,13 @@ Skills
     :header-rows: 0
     :widths: 2 9
 
+    * + Languages
+      + German (native), English (proficient)
     * + Programming
       + Python, C++, Java, Squeek/Smalltalk, Lua
-    * + Technologies
-      + - **Infrastructure** Docker, SQL (Postgres), Flask, Git, Kafka, Travis CI
-        - **Libraries and Frameworks (Python):** Flask, Django, Google Optimization Research Tools, Pytest
+    * + Technologies I have worked with
+      + - **Infrastructure and Tooling** Docker, Postgres, Flask, Git, Kafka, Travis CI, Jenkins, Kubernetes, Grafana
+        - **Libraries and Frameworks (Python):** Flask, Django, Google Optimization Research Tools, Pytest, numpy, Sphinx
         - **Libraries and Frameworks (Other):** OpenGL, Qt5
         - **Other Experience:** Arduino Programming, Signal Processing (audio)
     * + Side Projects

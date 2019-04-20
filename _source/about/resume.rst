@@ -5,7 +5,6 @@ Moritz Eissenhauer
 
     | moritz.eissenhauer@gmail.com
     | +44 07450 014741
-    | www.github.com/mmeissen
     | www.eissenhauer.com
 
 .. only:: web
@@ -33,7 +32,7 @@ Experience
       + **Software Engineer**, `Reckon Digital <https://reckondigital.com/>`_, London
 
         - Developed a Django web application backend to schedule the testing of large industrial turbines at General Electric
-        - Developed new features, improved test coverage, improved software and database architecture
+        - Developed new features, increased test coverage, improved software and database architecture
         - Responsible for design decisions, prioritizing tasks, defining specifications
 
 Education

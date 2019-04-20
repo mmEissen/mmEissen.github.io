@@ -25,7 +25,7 @@ Experience
 
         - Self managed work in startup culture
         - Implemented, improved, and maintained Python microservices for the integration of sports data with third party sources
-        - Worked with my team to foster a open and positive working environment
+        - Worked with my team to foster an open and positive working environment
         - Helped redesign the interview process for new candidates
         - Helped with the on-boarding process for new employees
 

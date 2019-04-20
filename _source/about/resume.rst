@@ -20,11 +20,12 @@ Experience
     :header-rows: 0
     :widths: 2 9
 
-    * + Nov 2017 ongoing
+    * + Nov 2017 to Present
       + **Software Engineer**, `Smarkets <https://smarketshq.com/>`_, London
 
-        - Implemented, improved, and maintained Python microservices for the integration of sports data from third party sources
         - Self managed work in startup culture
+        - Implemented, improved, and maintained Python microservices for the integration of sports data with third party sources
+        - Worked with my team to foster a open and positive working environment
         - Helped redesign the interview process for new candidates
         - Helped with the on-boarding process for new employees
 
@@ -32,7 +33,7 @@ Experience
       + **Software Engineer**, `Reckon Digital <https://reckondigital.com/>`_, London
 
         - Developed a Django web application backend to schedule the testing of large industrial turbines at General Electric
-        - Developed new features, improved test coverage, improved the software and database architecture
+        - Developed new features, improved test coverage, improved software and database architecture
         - Responsible for design decisions, prioritizing tasks, defining specifications
 
 Education
@@ -62,10 +63,10 @@ Skills
     :widths: 2 9
 
     * + Languages
-      + German (native), English (proficient)
+      + German (native), English (fluent)
     * + Programming
       + Python, C++, Java, Squeek/Smalltalk, Lua
-    * + Technologies I have worked with
+    * + Technologies I worked with
       + - **Infrastructure and Tooling** Docker, Postgres, Flask, Git, Kafka, Travis CI, Jenkins, Kubernetes, Grafana
         - **Libraries and Frameworks (Python):** Flask, Django, Google Optimization Research Tools, Pytest, numpy, Sphinx
         - **Libraries and Frameworks (Other):** OpenGL, Qt5

@@ -6,3 +6,13 @@ table, td, tr, th {
     border-color: #FFFFFF00 !important;
     box-shadow: none !important;
 }
+
+a {
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
+    border-bottom: inherit;
+}
+
+a.reference {
+    border-bottom: none;
+}

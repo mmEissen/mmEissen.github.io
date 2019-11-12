@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Moritz M. Eissenhauer
-=====================
+Moritz Eissenhauer
+==================
 
-Software engineer at Smarkets
+Software Engineer
 
 .. figure:: images/GitHub-Mark-120px-plus.png
     :target: https://github.com/mmEissen

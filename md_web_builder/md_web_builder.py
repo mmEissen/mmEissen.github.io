@@ -42,10 +42,14 @@ class NavigationItem:
     def html_file_directory(self):
         return os.path.dirname(self.html_file_path())
 
+    @staticmethod
+    def humanize(filename: str):
+        return " ".join(filename.split("_")).title()
+
     def title(self):
         if self.is_navigation_parent():
-            return self.directory_name()
-        return os.path.basename(self.path)[: -len(MARKDOWN_FILE_EXTENTION)]
+            return self.humanize(self.directory_name())
+        return self.humanize(os.path.basename(self.path)[: -len(MARKDOWN_FILE_EXTENTION)])
 
     def directory_name(self):
         return os.path.basename(os.path.dirname(self.path))
@@ -124,10 +128,11 @@ class PageBuilder:
         navigation_item: NavigationItem,
         context: t.Dict[str, t.Any],
     ) -> str:
+        title = navigation_item.title()
         sidebar = self.build_sidebar_for(navigation_item)
         content = self.build_markdown(navigation_item.path)
         return self.jinja_env.get_template(navigation_item.template).render(
-            {**context, "content": content, "sidebar": sidebar}
+            {**context, "content": content, "sidebar": sidebar, "title": title}
         )
 
     def build_sidebar_for(

@@ -22,25 +22,24 @@ class InvalidDirectoryTree(Exception):
 
 @dataclasses.dataclass
 class NavigationItem:
-    path: str
+    source_file_path: str
     sub_items: t.List[NavigationItem]
     template: str
-    root_dir: str
 
     def html_file_name(self):
         return (
-            os.path.basename(self.path)[: -len(MARKDOWN_FILE_EXTENTION)]
+            os.path.basename(self.source_file_path)[: -len(MARKDOWN_FILE_EXTENTION)]
             + HTML_FILE_EXTENTION
         )
 
     def html_file_path(self):
         return os.path.join(
-            os.path.dirname(os.path.relpath(self.path, self.root_dir)),
+            self.relative_file_directory(),
             self.html_file_name(),
         )
 
-    def html_file_directory(self):
-        return os.path.dirname(self.html_file_path())
+    def relative_file_directory(self):
+        return os.path.dirname(self.source_file_path)
 
     @staticmethod
     def humanize(filename: str):
@@ -49,10 +48,12 @@ class NavigationItem:
     def title(self):
         if self.is_navigation_parent():
             return self.humanize(self.directory_name())
-        return self.humanize(os.path.basename(self.path)[: -len(MARKDOWN_FILE_EXTENTION)])
+        return self.humanize(
+            os.path.basename(self.source_file_path)[: -len(MARKDOWN_FILE_EXTENTION)]
+        )
 
     def directory_name(self):
-        return os.path.basename(os.path.dirname(self.path))
+        return os.path.basename(self.relative_file_directory())
 
     @classmethod
     def local_template_file_maybe(cls, path: str, root_dir: str):
@@ -68,16 +69,17 @@ class NavigationItem:
             raise InvalidDirectoryTree("No root template file")
 
         items = []
-        for object in sorted(os.listdir(path)):
-            object_path = os.path.join(path, object)
-            if cls.path_is_navigation_leaf(object_path):
-                node = cls(object_path, [], template, root_dir)
-            elif cls.path_is_navigation_dir(object_path):
+        for file_object in sorted(os.listdir(path)):
+            full_path = os.path.join(path, file_object)
+            print(full_path)
+            file_object_path = os.path.relpath(full_path, root_dir)
+            if cls.path_is_navigation_leaf(full_path):
+                node = cls(file_object_path, [], template)
+            elif cls.path_is_navigation_dir(full_path):
                 node = cls(
-                    os.path.join(object_path, MARKDOWN_INDEX_FILE),
-                    cls.from_path(object_path, template=template, root_dir=root_dir),
+                    os.path.join(file_object_path, MARKDOWN_INDEX_FILE),
+                    cls.from_path(full_path, template=template, root_dir=root_dir),
                     template,
-                    root_dir,
                 )
             else:
                 continue
@@ -113,7 +115,7 @@ class PageBuilder:
         self.navigation = NavigationItem.from_path(self.source_dir)
 
     def build_markdown(self, file_path: str) -> str:
-        with open(file_path) as file_:
+        with open(os.path.join(self.source_dir, file_path)) as file_:
             text = file_.read()
         response = requests.post(
             "https://api.github.com/markdown",
@@ -130,7 +132,7 @@ class PageBuilder:
     ) -> str:
         title = navigation_item.title()
         sidebar = self.build_sidebar_for(navigation_item)
-        content = self.build_markdown(navigation_item.path)
+        content = self.build_markdown(navigation_item.source_file_path)
         return self.jinja_env.get_template(navigation_item.template).render(
             {**context, "content": content, "sidebar": sidebar, "title": title}
         )
@@ -146,9 +148,9 @@ class PageBuilder:
             (
                 item.title(),
                 os.path.relpath(
-                    item.html_file_path(), requester_item.html_file_directory()
+                    item.html_file_path(), requester_item.relative_file_directory()
                 ),
-                self.build_sidebar_for(item, item.sub_items),
+                self.build_sidebar_for(requester_item, item.sub_items),
             )
             for item in root_items
         ]
@@ -165,6 +167,7 @@ class PageBuilder:
         for item in root_items:
             page = self.build_page(item, global_context)
             html_file_path = os.path.join(self.destination_dir, item.html_file_path())
+            print(html_file_path)
             os.makedirs(os.path.dirname(html_file_path), exist_ok=True)
             with open(html_file_path, "w") as file_:
                 file_.write(page)

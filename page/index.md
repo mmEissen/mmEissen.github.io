@@ -1,3 +1,3 @@
-# Welcome to Zombocom
+# About
 
-lorem ipsum dolor
+Creative brain.

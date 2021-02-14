@@ -2,6 +2,9 @@ from __future__ import annotations
 import typing as t
 import os
 import requests
+from requests import auth
+
+import functools
 
 import dataclasses
 
@@ -20,7 +23,7 @@ class InvalidDirectoryTree(Exception):
     pass
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class NavigationItem:
     source_file_path: str
     sub_items: t.List[NavigationItem]
@@ -103,17 +106,23 @@ class NavigationItem:
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class PageBuilder:
     source_dir: str
     destination_dir: str
+    gh_token: str
 
     def __post_init__(self) -> None:
-        self.jinja_env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(self.source_dir)
+        object.__setattr__(
+            self,
+            "jinja_env",
+            jinja2.Environment(loader=jinja2.FileSystemLoader(self.source_dir)),
         )
-        self.navigation = NavigationItem.from_path(self.source_dir)
+        object.__setattr__(
+            self, "navigation", NavigationItem.from_path(self.source_dir)
+        )
 
+    @functools.lru_cache
     def build_markdown(self, file_path: str) -> str:
         with open(os.path.join(self.source_dir, file_path)) as file_:
             text = file_.read()
@@ -121,6 +130,7 @@ class PageBuilder:
             "https://api.github.com/markdown",
             json={"text": text},
             headers={"Accept": "application/vnd.github.v3+json"},
+            auth=auth.HTTPBasicAuth("mmEissen", self.gh_token),
         )
         response.raise_for_status()
         return str(response.content, "utf-8")
@@ -131,30 +141,46 @@ class PageBuilder:
         context: t.Dict[str, t.Any],
     ) -> str:
         title = navigation_item.title()
-        sidebar = self.build_sidebar_for(navigation_item)
+        navbar = self.build_navbar_for(navigation_item)
         content = self.build_markdown(navigation_item.source_file_path)
+        children = [
+            (
+                child.title,
+                os.path.relpath(
+                    child.html_file_path(), navigation_item.relative_file_directory()
+                ),
+                self.build_markdown(child.source_file_path),
+            )
+            for child in navigation_item.sub_items
+        ]
         return self.jinja_env.get_template(navigation_item.template).render(
-            {**context, "content": content, "sidebar": sidebar, "title": title}
+            {
+                **context,
+                "content": content,
+                "navbar": navbar,
+                "title": title,
+                "children": children,
+            }
         )
 
-    def build_sidebar_for(
+    def build_navbar_for(
         self, requester_item: NavigationItem, root_items: t.List[NavigationItem] = None
     ):
         if root_items is None:
             root_items = self.navigation
         if not root_items:
             return []
-        sidebar = [
+        navbar = [
             (
                 item.title(),
                 os.path.relpath(
                     item.html_file_path(), requester_item.relative_file_directory()
                 ),
-                self.build_sidebar_for(requester_item, item.sub_items),
+                self.build_navbar_for(requester_item, item.sub_items),
             )
             for item in root_items
         ]
-        return sidebar
+        return navbar
 
     def build_pages_recursive(
         self,
@@ -181,8 +207,9 @@ class PageBuilder:
 @click.command()
 @click.argument("source", type=click.Path())
 @click.argument("destination")
-def build(source: str, destination: str):
-    PageBuilder(source, destination).build_pages_recursive()
+@click.option("--gh-token", type=str, envvar="GH_TOKEN")
+def build(source: str, destination: str, gh_token: str):
+    PageBuilder(source, destination, gh_token).build_pages_recursive()
 
 
 if __name__ == "__main__":

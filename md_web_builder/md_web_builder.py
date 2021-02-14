@@ -145,7 +145,7 @@ class PageBuilder:
         content = self.build_markdown(navigation_item.source_file_path)
         children = [
             (
-                child.title,
+                child.title(),
                 os.path.relpath(
                     child.html_file_path(), navigation_item.relative_file_directory()
                 ),
@@ -208,8 +208,9 @@ class PageBuilder:
 @click.argument("source", type=click.Path())
 @click.argument("destination")
 @click.option("--gh-token", type=str, envvar="GH_TOKEN")
-def build(source: str, destination: str, gh_token: str):
-    PageBuilder(source, destination, gh_token).build_pages_recursive()
+@click.option("--static-root", type=str)
+def build(source: str, destination: str, gh_token: str, static_root):
+    PageBuilder(source, destination, gh_token).build_pages_recursive(global_context={"static_root": static_root})
 
 
 if __name__ == "__main__":

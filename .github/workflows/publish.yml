@@ -26,6 +26,7 @@ jobs:
           mv ./page/static ./build/
           find . ! -name '.git' ! -name '.' ! -name '..' ! -name 'build' -maxdepth 1 -exec rm -rf {} +
           mv build/* ./
+          touch .nojekyll
           git config --global user.name 'Moritz Eissenhauer'
           git config --global user.email 'mmeissen@users.noreply.github.com'
           git add --a

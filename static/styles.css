@@ -79,5 +79,7 @@ h1 {
 }
 
 .article-tile-link:hover {
+    border-color: #212529;
     border-left-style: double;
+    border-right-style: double;
 }

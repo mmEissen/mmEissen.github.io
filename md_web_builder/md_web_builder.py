@@ -46,7 +46,14 @@ class NavigationItem:
 
     @staticmethod
     def humanize(filename: str):
-        return " ".join(filename.split("_")).title()
+        parts = filename.split("_")
+        try:
+            int(parts[0])
+        except ValueError:
+            pass
+        else:
+            parts = parts[1:]
+        return " ".join(parts).title()
 
     def title(self):
         if self.is_navigation_parent():
@@ -91,7 +98,7 @@ class NavigationItem:
         return items
 
     def is_navigation_parent(self):
-        return bool(self.sub_items)
+        return os.path.basename(self.source_file_path) == MARKDOWN_INDEX_FILE
 
     @staticmethod
     def path_is_navigation_dir(path: str):
@@ -210,7 +217,9 @@ class PageBuilder:
 @click.option("--gh-token", type=str, envvar="GH_TOKEN")
 @click.option("--static-root", type=str)
 def build(source: str, destination: str, gh_token: str, static_root):
-    PageBuilder(source, destination, gh_token).build_pages_recursive(global_context={"static_root": static_root})
+    PageBuilder(source, destination, gh_token).build_pages_recursive(
+        global_context={"static_root": static_root}
+    )
 
 
 if __name__ == "__main__":

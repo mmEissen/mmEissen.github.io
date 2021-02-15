@@ -20,7 +20,7 @@ jobs:
         run: poetry install --no-dev
       - name: Build
         working-directory: ./md_web_builder
-        run: poetry run python -m md_web_builder ../page ../build --static-root https://eissenhauer.com/static
+        run: poetry run python -m md_web_builder ../page ../build --static-root https://mmeissen.github.io/static
       - name: Publish
         run: |
           mv ./page/static ./build/

@@ -24,7 +24,7 @@ jobs:
       - name: Publish
         run: |
           mv ./page/static ./build/
-          find . ! -name '.git' ! -name 'build' -maxdepth 1 -exec rm -rf {} +
+          find . ! -name '.git' ! -name 'build' -maxdepth 1 -delete
           mv build/* ./
           git config --global user.name 'Moritz Eissenhauer'
           git config --global user.email 'mmeissen@users.noreply.github.com'

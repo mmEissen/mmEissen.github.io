@@ -17,6 +17,7 @@ HTML_FILE_EXTENTION = ".html"
 MARKDOWN_INDEX_FILE = f"__index__{MARKDOWN_FILE_EXTENTION}"
 HTML_INDEX_FILE = f"__index__{HTML_FILE_EXTENTION}"
 TEMPLATE_FILE_NAME = f"__template__{HTML_FILE_EXTENTION}"
+HIDE_PREFIX = "#"
 
 
 class InvalidDirectoryTree(Exception):
@@ -28,10 +29,26 @@ class NavigationItem:
     source_file_path: str
     sub_items: t.List[NavigationItem]
     template: str
+    is_hidden: bool
+
+    @staticmethod
+    def remove_modifiers(filename) -> str:
+        parts = filename.split("_")
+        try:
+            int(parts[0])
+        except ValueError:
+            pass
+        else:
+            parts = parts[1:]
+        if parts[0] == HIDE_PREFIX:
+            parts = parts[1:]
+        return "_".join(parts)
 
     def html_file_name(self):
         return (
-            os.path.basename(self.source_file_path)[: -len(MARKDOWN_FILE_EXTENTION)]
+            self.remove_modifiers(
+                os.path.basename(self.source_file_path)[: -len(MARKDOWN_FILE_EXTENTION)]
+            )
             + HTML_FILE_EXTENTION
         )
 
@@ -44,16 +61,9 @@ class NavigationItem:
     def relative_file_directory(self):
         return os.path.dirname(self.source_file_path)
 
-    @staticmethod
-    def humanize(filename: str):
-        parts = filename.split("_")
-        try:
-            int(parts[0])
-        except ValueError:
-            pass
-        else:
-            parts = parts[1:]
-        return " ".join(parts).title()
+    @classmethod
+    def humanize(cls, filename: str):
+        return " ".join(cls.remove_modifiers(filename).split("_")).title()
 
     def title(self):
         if self.is_navigation_parent():
@@ -81,15 +91,16 @@ class NavigationItem:
         items = []
         for file_object in sorted(os.listdir(path)):
             full_path = os.path.join(path, file_object)
-            print(full_path)
             file_object_path = os.path.relpath(full_path, root_dir)
+            is_hidden = file_object.split("_")[0] == HIDE_PREFIX
             if cls.path_is_navigation_leaf(full_path):
-                node = cls(file_object_path, [], template)
+                node = cls(file_object_path, [], template, is_hidden)
             elif cls.path_is_navigation_dir(full_path):
                 node = cls(
                     os.path.join(file_object_path, MARKDOWN_INDEX_FILE),
                     cls.from_path(full_path, template=template, root_dir=root_dir),
                     template,
+                    is_hidden,
                 )
             else:
                 continue
@@ -185,7 +196,7 @@ class PageBuilder:
                 ),
                 self.build_navbar_for(requester_item, item.sub_items),
             )
-            for item in root_items
+            for item in root_items if not item.is_hidden
         ]
         return navbar
 

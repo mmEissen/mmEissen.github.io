@@ -1,1 +1,1 @@
-<img src="../../static/umbrella.jpg" width="100%"/>
+<img src="../static/umbrella.jpg" width="100%"/>

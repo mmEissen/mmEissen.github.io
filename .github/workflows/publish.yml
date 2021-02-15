@@ -1,0 +1,36 @@
+name: Package Release
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  build_and_publish:
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - quality_assurance
+      - build_and_publish_docker
+    runs-on: ubuntu-latest
+    container:
+      image:  python:3.8-buster
+    steps:
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.1
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install
+        working-directory: ./md_web_builder
+        run: poetry install --no-dev
+      - name: Build
+        working-directory: ./md_web_builder
+        run: poetry run python -m md_web_builder ../page ../build --static-root https://eissenhauer.com/static
+      - name: Publish
+        run: |
+          mv ./page/static ./build/
+          rm -rf !("build"|".git")
+          mv build/* ./
+          git add --a
+          git config --global user.name 'Moritz Eissenhauer'
+          git config --global user.email 'mmeissen@users.noreply.github.com'
+

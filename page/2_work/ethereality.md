@@ -1,4 +1,4 @@
-<img src="../../static/ethereality.jpg" width="100%"/>
+<img src="../static/ethereality.jpg" width="100%"/>
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et mi nunc. Nam bibendum, risus at fermentum tempus, nulla elit venenatis nibh, in accumsan quam eros ac erat. Vestibulum mollis ligula quis ante hendrerit suscipit. Donec hendrerit erat erat, egestas placerat nisi porta non. Nunc et elit eu tellus feugiat ullamcorper at in est. Nulla posuere vel augue ut auctor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper interdum tortor sed varius. Nunc elit mi, ornare ut lobortis et, molestie maximus diam. Donec tellus mauris, porttitor id odio sed, mattis hendrerit erat. Quisque vitae velit felis. Nulla vel turpis ac nibh consectetur interdum in nec erat. Mauris fermentum in erat et ultricies.
 

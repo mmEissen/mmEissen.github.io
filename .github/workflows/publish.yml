@@ -7,10 +7,6 @@ on:
 
 jobs:
   build_and_publish:
-    if: github.ref == 'refs/heads/master'
-    needs:
-      - quality_assurance
-      - build_and_publish_docker
     runs-on: ubuntu-latest
     container:
       image:  python:3.8-buster

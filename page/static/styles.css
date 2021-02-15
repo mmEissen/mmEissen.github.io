@@ -1,0 +1,85 @@
+body {
+    font-family: 'Playfair Display', serif;
+    text-align: justify;
+    color: #212529;
+}
+
+::selection {
+    background-color: rgb(255, 162, 209);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+h1 {
+    font-weight: 600;
+}
+
+.navbar {
+    padding-left: 0;
+}
+
+.nav-link {
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
+}
+
+.nav-link:hover {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.container {
+    max-width: 950px;
+}
+
+.article-tile {
+    height: 10em;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.article-tile>hr {
+    text-align: left;
+    border-top: #212529 dotted 1px;
+    margin-top: 0;
+}
+
+.article-tile-content {
+    position: relative;
+    width: 200%;
+    height: 200%;
+    transform-origin: top left;
+    transform: scale(0.5);
+    margin: 0;
+}
+
+.article-tile-content>.col {
+    padding: 0;
+}
+
+.article-tile>a:hover {
+    text-decoration: none;
+}
+
+.article-tile>a {
+    display: block;
+    text-decoration: none;
+    color: #212529;
+}
+
+.article-tile-link {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 84%, rgba(255, 255, 255, 1) 100%);
+}
+
+.article-tile-link:hover {
+    border-color: #212529;
+    border-left-style: double;
+    border-right-style: double;
+}

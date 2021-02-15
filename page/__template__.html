@@ -18,8 +18,8 @@
 
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
-            <a class="navbar-brand" href="#">Moritz Eissenhauer</a>
+        <nav class="navbar navbar-expand-sm">
+            <a class="navbar-brand p-0" href="#">Moritz Eissenhauer</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -27,44 +27,33 @@
                 <ul class="navbar-nav mr-auto">
                     {% for title, target, sub_navigation in navbar %}
                     <li class="nav-item">
-                        <a href="{{ target }}" class="nav-link">{{ title }}</a>
+                        <a href="{{ target }}" class="nav-link p-0 m-2">{{ title }}</a>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
         </nav>
-        <div class="row py-4">
-            <div class="col">
-                <h1>{{ title }}</h1>
-            </div>
-        </div>
         <div class="row">
             <div class="col">
+                <h1 class="pb-3 pt-5">{{ title }}</h1>
                 {{ content }}
             </div>
         </div>
         {% if children %}
         <div class="row">
-            <div class="col">
-                {% for child_title, child_target, child_content in children %}
-                <div class="row py-3">
-                    <div class="col article-tile">
-                        <a href="{{ child_target }}">
-                            <span class="article-tile-link">
-                            </span>
-                            <div class="row">
-                                <div class="col article-tile-title">
-                                    <h2>{{ child_title }}</h2>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="row article-tile-content">
-                            <div class="col">{{ child_content }}</div>
-                        </div>
+            {% for child_title, child_target, child_content in children %}
+            <div class="col-sm-6 my-3 article-tile">
+                <a href="{{ child_target }}">
+                    <div class="article-tile-link">
                     </div>
+                </a>
+                <hr>
+                <h2 class="article-tile-title pb-2">{{ child_title }}</h2>
+                <div class="article-tile-content">
+                    {{ child_content }}
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
         {% endif %}
     </div>

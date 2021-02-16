@@ -6,26 +6,39 @@ body {
 
 ::selection {
     background-color: rgb(255, 162, 209);
-    text-decoration: underline;
-    text-decoration-style: dotted;
+}
+
+h1,
+h2 {
+    font-family: 'Poiret One', cursive;
+    font-weight: 500;
 }
 
 h1 {
     font-weight: 600;
 }
 
+a {
+    color: #212529;
+    text-decoration: dotted 1px #212529 underline;
+}
+
+a:hover {
+    color: #212529;
+    text-decoration-style: double;
+}
+
 .navbar {
     padding-left: 0;
 }
 
-.nav-link {
-    border-bottom-width: 1px;
-    border-bottom-style: dotted;
+.navbar~a {
+    text-decoration: none;
 }
 
-.nav-link:hover {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
+.navbar-brand {
+    font-family: 'Poiret One', cursive;
+    font-size: 20pt;
 }
 
 .container {
@@ -33,7 +46,7 @@ h1 {
 }
 
 .article-tile {
-    height: 10em;
+    height: 15em;
     overflow: hidden;
     box-sizing: border-box;
 }

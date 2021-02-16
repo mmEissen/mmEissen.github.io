@@ -3,6 +3,7 @@ import typing as t
 import os
 import requests
 from requests import auth
+import shutil
 
 import functools
 
@@ -129,6 +130,7 @@ class PageBuilder:
     source_dir: str
     destination_dir: str
     gh_token: str
+    static_files: t.Tuple[str, ...]
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -171,6 +173,10 @@ class PageBuilder:
             )
             for child in navigation_item.sub_items
         ]
+        root_dir = os.path.relpath(
+            self.source_dir,
+            os.path.join(self.source_dir, navigation_item.relative_file_directory()),
+        )
         return self.jinja_env.get_template(navigation_item.template).render(
             {
                 **context,
@@ -178,6 +184,7 @@ class PageBuilder:
                 "navbar": navbar,
                 "title": title,
                 "children": children,
+                "root_dir": root_dir,
             }
         )
 
@@ -196,7 +203,8 @@ class PageBuilder:
                 ),
                 self.build_navbar_for(requester_item, item.sub_items),
             )
-            for item in root_items if not item.is_hidden
+            for item in root_items
+            if not item.is_hidden
         ]
         return navbar
 
@@ -221,16 +229,34 @@ class PageBuilder:
                     global_context,
                 )
 
+    def copy_static_files(self):
+        for name in self.static_files:
+            full_source_name = os.path.join(self.source_dir, name)
+            full_destination_name = os.path.join(self.destination_dir, name)
+            if os.path.isdir(full_source_name):
+                shutil.copytree(full_source_name, full_destination_name, dirs_exist_ok=True)
+            elif os.path.isfile(full_source_name):
+                shutil.copy2(full_source_name, full_destination_name)
+    
+    def clean(self):
+        if os.path.isdir(self.destination_dir):
+            shutil.rmtree(self.destination_dir)
+
+    def build(self, clean=False):
+        if clean:
+            self.clean()
+        self.build_pages_recursive()
+        self.copy_static_files()
+
 
 @click.command()
 @click.argument("source", type=click.Path())
 @click.argument("destination")
 @click.option("--gh-token", type=str, envvar="GH_TOKEN")
-@click.option("--static-root", type=str)
-def build(source: str, destination: str, gh_token: str, static_root):
-    PageBuilder(source, destination, gh_token).build_pages_recursive(
-        global_context={"static_root": static_root}
-    )
+@click.option("--keep", type=click.Path(), multiple=True)
+@click.option("--clean", is_flag=True)
+def build(source: str, destination: str, gh_token: str, keep: t.List[str], clean: bool):
+    PageBuilder(source, destination, gh_token, tuple(keep)).build(clean)
 
 
 if __name__ == "__main__":

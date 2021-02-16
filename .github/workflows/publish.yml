@@ -20,7 +20,7 @@ jobs:
         run: poetry install --no-dev
       - name: Build
         working-directory: ./md_web_builder
-        run: poetry run python -m md_web_builder ../page_source ../docs --keep static --keep CNAME --keep .nojekyl --clean
+        run: poetry run python -m md_web_builder ../page_source ../docs --keep static --keep CNAME --keep .nojekyll --clean
       - name: Publish
         run: |
           git config --global user.name 'Moritz Eissenhauer'

@@ -18,6 +18,9 @@ jobs:
       - name: Install
         working-directory: ./md_web_builder
         run: poetry install --no-dev
+      - name: Build Images
+        working-directory: ./md_web_builder
+        run: poetry run python -m md_web_builder.image_builder ../page_source/images/ ../page_source/static/images
       - name: Build
         working-directory: ./md_web_builder
         run: poetry run python -m md_web_builder ../page_source ../docs --keep static --keep CNAME --keep .nojekyll --clean

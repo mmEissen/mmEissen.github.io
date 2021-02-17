@@ -1,1 +1,1 @@
-<img src="../static/dodeca_lamp.jpg" width="100%"/>
+![Dodecahedron Lamp](../static/images/dodeca-lamp.png "A lamp")

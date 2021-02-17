@@ -1,1 +1,1 @@
-<img src="../static/umbrella.jpg" width="100%"/>
+![Dodecahedron Lamp](../static/images/umbrella-lg-preview.png "A lamp")

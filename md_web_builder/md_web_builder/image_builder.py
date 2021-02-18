@@ -1,11 +1,16 @@
 import click
-from PIL import Image, ImageFilter, ImageOps, ImageChops
+from PIL import Image, ImageFilter, ImageOps, ImageChops, ImageDraw
 import numpy as np
 
+import math
 import os
 
 
-SIZES = [(920, "lg"), (460, "md")]
+SIZES = [
+    (920, "lg"),
+    (460, "md"),
+]
+
 
 def rgb_to_cmyk(r, g, b):
     r = r / 255
@@ -29,22 +34,26 @@ def cmyk_to_rgb(c, m, y, k):
     return r, g, b
 
 
-def color_layer(image, color_intensity=0.3):
-    rgb_to_cmyk_ = np.vectorize(rgb_to_cmyk)
-    cmyk_to_rgb_ = np.vectorize(cmyk_to_rgb)
+rgb_to_cmyk_vector = np.vectorize(rgb_to_cmyk)
+cmyk_to_rgb_vector = np.vectorize(cmyk_to_rgb)
 
-    array = np.asarray(image.convert("RGB")).astype("float")
-    c, m, y, _ = rgb_to_cmyk_(*np.rollaxis(array, axis=-1))
-    bands = (
-        Image.fromarray(np.clip(band / color_intensity, 0, 255).astype("uint8"), "L")
-        for band in (c, m, y)
-    )
-    bands = (band.convert("1", dither=Image.NONE).convert("L") for band in bands)
-    bands = (np.asarray(band).astype("float") * color_intensity for band in bands)
-    bands = cmyk_to_rgb_(*bands, np.zeros_like(c))
-    r, g, b = (Image.fromarray(band.astype("uint8"), "L") for band in bands)
 
-    return Image.merge("RGB", (r, g, b)).convert("RGBA")
+def cmy_to_rgba_image(c, m, y, size):
+    r, g, b = (Image.fromarray(band.astype("uint8"), "L") for band in cmyk_to_rgb_vector(c, m, y, np.zeros_like(c)))
+    a = Image.new("L", size, 255)
+    return Image.merge("RGBA", (r, g, b, a))
+
+
+def to_layer(mask, color):
+    color = Image.new("RGBA", mask.size, color)
+    alpha = Image.new("RGBA", mask.size)
+    return Image.composite(color, alpha, mask=mask)
+
+
+def blob_mask(color_band):
+    band = Image.fromarray(np.clip(color_band, 0, 255).astype("uint8"), "L")
+    band = band.convert("1", dither=Image.NONE).convert("L")
+    return np.asarray(band).astype("float")
 
 
 def dither_layer(image, dither_size=2):
@@ -63,17 +72,77 @@ def dither_layer(image, dither_size=2):
     )
 
 
-def build_preview_image(image, target_width):
-    image = image.resize(
-        (target_width, round(image.height * target_width / image.width)),
-        Image.ANTIALIAS,
+def halftone_mask(color_band: Image.Image, angle=0, dot_size=4, supersample=10):
+    original_width, original_height = color_band.size
+
+    rotated = color_band.rotate(-angle, expand=True, resample=Image.BICUBIC)
+
+    color_band = Image.new("L", (rotated.width + 2 * dot_size, rotated.height + 2 * dot_size))
+    color_band.paste(rotated, (dot_size, dot_size))
+
+    halftone_image = Image.new(
+        "L",
+        (color_band.width * supersample, color_band.height * supersample),
     )
-    color_image = color_layer(image)
-    dither = dither_layer(image)
-    return Image.alpha_composite(color_image, dither)
+    draw = ImageDraw.Draw(halftone_image)
+    triangle_height = math.sqrt(3) / 2
+
+    look_up_image_a = color_band.resize(
+        (
+            round(color_band.width / dot_size),
+            round((color_band.height / dot_size) / triangle_height),
+        )
+    )
+    look_up_image_b = color_band.transform(
+        color_band.size, Image.AFFINE, (1, 0, dot_size / 2, 0, 1, 0)
+    ).resize(
+        (
+            round(color_band.width / dot_size),
+            round((color_band.height / dot_size) / triangle_height),
+        )
+    )
+
+    pixels_a = look_up_image_a.load()
+    pixels_b = look_up_image_b.load()
+
+    dot_size *= supersample
+    for x in range(look_up_image_a.width):
+        for y in range(look_up_image_a.height):
+            is_a_row = y % 2 == 0
+            if is_a_row:
+                color = pixels_a[x, y]
+            else:
+                color = pixels_b[x, y]
+            size = dot_size * (color / 255)
+            diff = (dot_size - size) / 2
+            shift = is_a_row * (dot_size / 2)
+            ul = (x * dot_size + diff + shift, y * (dot_size * triangle_height) + diff)
+            lr = ((x + 1) * dot_size - diff + shift, (y + 1) * (dot_size * triangle_height) - diff)
+            draw.ellipse([ul, lr], fill=255)
+
+    halftone_image = halftone_image.resize(color_band.size).rotate(angle, resample=Image.BICUBIC)
+    left = round((halftone_image.width - original_width) / 2)
+    upper = round((halftone_image.height - original_height) / 2)
+
+    return halftone_image.crop((left, upper, left + original_width, upper + original_height))
 
 
-def build_image(image, target_width):
+def halftone_layer(color_band, color, angle, dot_size=4, supersample=10):
+    return to_layer(halftone_mask(color_band, angle, dot_size, supersample), color)
+
+
+def build_preview_image(image):
+    array = np.asarray(image.convert("RGB")).astype("float")
+    c, m, y, k = [Image.fromarray(band.astype("uint8"), "L") for band in rgb_to_cmyk_vector(*np.rollaxis(array, axis=-1))]
+
+    k = halftone_layer(k, (0, 0, 0, 255), 0)
+
+    image = cmy_to_rgba_image(c, m, y, image.size)
+    image.alpha_composite(k)
+    return image
+
+
+def resize_to(image, target_width):
     return image.resize(
         (target_width, round(image.height * target_width / image.width)),
         Image.ANTIALIAS,
@@ -91,12 +160,11 @@ def build(source: str, destination: str):
         full_name = os.path.join(source, file_name)
         image = Image.open(full_name).convert("RGBA")
         for width, postfix in SIZES:
-
-            new_image = build_preview_image(image, width)
-            new_image.save(os.path.join(destination, f"{base_name}-{postfix}-preview.png"))
-
-            new_image = build_image(image, width)
+            new_image = resize_to(image, width)
             new_image.save(os.path.join(destination, f"{base_name}-{postfix}.png"))
+
+            new_image = build_preview_image(new_image)
+            new_image.save(os.path.join(destination, f"{base_name}-{postfix}-preview.png"))
 
 
 if __name__ == "__main__":

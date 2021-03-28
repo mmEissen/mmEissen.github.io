@@ -1,1 +1,3 @@
-![Dodecahedron Lamp](../static/images/dodeca-lamp.png "A lamp")
+A Dodecahedral lamp shade.
+
+Paper and MDF.
